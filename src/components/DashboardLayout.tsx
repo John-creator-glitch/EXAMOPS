@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/Card';
 import {
   GraduationCap, LayoutDashboard, Building2, Users, LogOut,
   Menu, X, ChevronDown, Calendar, BookOpen, DoorOpen, FileText,
-  QrCode, BarChart3, ClipboardList, Settings
+  QrCode, BarChart3, ClipboardList, UserRound
 } from 'lucide-react';
 
 interface NavItem {
@@ -32,10 +32,12 @@ const navSections: { title: string; items: NavItem[] }[] = [
     ],
   },
   {
-    title: 'Academic (Module 2+)',
+    title: 'Academic',
     items: [
-      { to: '/dashboard/programs', label: 'Programs & Courses', icon: BookOpen, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER', 'REGISTRAR', 'HOD'] },
+      { to: '/dashboard/programs', label: 'Programs', icon: BookOpen, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER', 'REGISTRAR', 'HOD'] },
+      { to: '/dashboard/courses', label: 'Courses', icon: BookOpen, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER', 'REGISTRAR', 'HOD'] },
       { to: '/dashboard/rooms', label: 'Rooms', icon: DoorOpen, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER'] },
+      { to: '/dashboard/faculty', label: 'Faculty', icon: UserRound, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER', 'REGISTRAR', 'HOD'] },
       { to: '/dashboard/cycles', label: 'Exam Cycles', icon: Calendar, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER'] },
     ],
   },

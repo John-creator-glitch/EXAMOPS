@@ -7,6 +7,10 @@ import SignUpPage from '@/pages/SignUpPage';
 import DashboardOverview from '@/pages/DashboardOverview';
 import TenantsPage from '@/pages/TenantsPage';
 import UsersPage from '@/pages/UsersPage';
+import ProgramsPage from '@/pages/ProgramsPage';
+import CoursesPage from '@/pages/CoursesPage';
+import RoomsPage from '@/pages/RoomsPage';
+import FacultyPage from '@/pages/FacultyPage';
 import { Card } from '@/components/ui/Card';
 import { Construction } from 'lucide-react';
 
@@ -43,8 +47,10 @@ function App() {
             <Route index element={<DashboardOverview />} />
             <Route path="tenants" element={<TenantsPage />} />
             <Route path="users" element={<UsersPage />} />
-            <Route path="programs" element={<ComingSoon title="Programs & Courses" />} />
-            <Route path="rooms" element={<ComingSoon title="Rooms" />} />
+            <Route path="programs" element={<ProgramsPage />} />
+            <Route path="courses" element={<CoursesPage />} />
+            <Route path="rooms" element={<RoomsPage />} />
+            <Route path="faculty" element={<FacultyPage />} />
             <Route path="cycles" element={<ComingSoon title="Exam Cycles" />} />
             <Route path="datesheet" element={<ComingSoon title="Datesheet" />} />
             <Route path="allocation" element={<ComingSoon title="Room Allocation" />} />

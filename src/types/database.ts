@@ -81,3 +81,78 @@ export const ROLE_COLORS: Record<UserRole, string> = {
   FACULTY: 'bg-gray-100 text-gray-800 border-gray-200',
   VIEWER: 'bg-slate-100 text-slate-800 border-slate-200',
 };
+
+// ============================================================
+// Module 2: Academic Master Data
+// ============================================================
+
+export type RoomType = 'CLASSROOM' | 'HALL' | 'LAB' | 'OPEN_SPACE';
+
+export interface Program {
+  id: string;
+  tenant_id: string;
+  code: string;
+  name: string;
+  duration_years: number;
+  total_semesters: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Course {
+  id: string;
+  tenant_id: string;
+  program_id: string;
+  code: string;
+  title: string;
+  credit_hours: number;
+  semester: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  program?: Program | null;
+}
+
+export interface Room {
+  id: string;
+  tenant_id: string;
+  code: string;
+  name: string;
+  building: string | null;
+  floor: string | null;
+  capacity: number;
+  room_type: RoomType;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Faculty {
+  id: string;
+  tenant_id: string;
+  employee_id: string;
+  full_name: string;
+  email: string | null;
+  phone: string | null;
+  department: string | null;
+  designation: string | null;
+  max_duties_per_day: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export const ROOM_TYPE_LABELS: Record<RoomType, string> = {
+  CLASSROOM: 'Classroom',
+  HALL: 'Hall',
+  LAB: 'Lab',
+  OPEN_SPACE: 'Open Space',
+};
+
+export const ROOM_TYPE_COLORS: Record<RoomType, string> = {
+  CLASSROOM: 'bg-blue-100 text-blue-800 border-blue-200',
+  HALL: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  LAB: 'bg-amber-100 text-amber-800 border-amber-200',
+  OPEN_SPACE: 'bg-slate-100 text-slate-800 border-slate-200',
+};
