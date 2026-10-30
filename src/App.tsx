@@ -16,6 +16,7 @@ import TimeSlotsPage from '@/pages/TimeSlotsPage';
 import DatesheetsPage from '@/pages/DatesheetsPage';
 import DatesheetDetailPage from '@/pages/DatesheetDetailPage';
 import RoomAllocationPage from '@/pages/RoomAllocationPage';
+import InvigilationPage from '@/pages/InvigilationPage';
 import { Card } from '@/components/ui/Card';
 import { Construction } from 'lucide-react';
 
@@ -61,7 +62,7 @@ function App() {
             <Route path="datesheet" element={<DatesheetsPage />} />
             <Route path="datesheets/:datesheetId" element={<DatesheetDetailPage />} />
             <Route path="allocation" element={<RoomAllocationPage />} />
-            <Route path="invigilation" element={<ComingSoon title="Invigilation" />} />
+            <Route path="invigilation" element={<InvigilationPage />} />
             <Route path="envelopes" element={<ComingSoon title="Envelope Tracker" />} />
             <Route path="qr" element={<ComingSoon title="QR Publisher" />} />
             <Route path="analytics" element={<ComingSoon title="Analytics" />} />

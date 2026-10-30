@@ -262,3 +262,32 @@ export const DATESHEET_STATUS_COLORS: Record<DatesheetStatus, string> = {
   DRAFT: 'bg-slate-100 text-slate-700 border-slate-200',
   PUBLISHED: 'bg-emerald-100 text-emerald-800 border-emerald-200',
 };
+
+// ============================================================
+// Module 6: Invigilation Duty Engine
+// ============================================================
+
+export type InvigilationRole = 'CHIEF_INVIGILATOR' | 'INVIGILATOR' | 'RELIEF';
+
+export interface InvigilationDuty {
+  id: string;
+  tenant_id: string;
+  datesheet_item_id: string;
+  faculty_id: string;
+  role: InvigilationRole;
+  created_at: string;
+  updated_at: string;
+  faculty?: Faculty | null;
+}
+
+export const INVIGILATION_ROLE_LABELS: Record<InvigilationRole, string> = {
+  CHIEF_INVIGILATOR: 'Chief Invigilator',
+  INVIGILATOR: 'Invigilator',
+  RELIEF: 'Relief',
+};
+
+export const INVIGILATION_ROLE_COLORS: Record<InvigilationRole, string> = {
+  CHIEF_INVIGILATOR: 'bg-blue-100 text-blue-800 border-blue-200',
+  INVIGILATOR: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  RELIEF: 'bg-amber-100 text-amber-800 border-amber-200',
+};
