@@ -156,3 +156,64 @@ export const ROOM_TYPE_COLORS: Record<RoomType, string> = {
   LAB: 'bg-amber-100 text-amber-800 border-amber-200',
   OPEN_SPACE: 'bg-slate-100 text-slate-800 border-slate-200',
 };
+
+// ============================================================
+// Module 3: Exam Cycles & Time Slots
+// ============================================================
+
+export type CycleType = 'MIDTERM' | 'FINAL' | 'SUPPLEMENTARY' | 'MAKEUP';
+export type CycleStatus = 'DRAFT' | 'PUBLISHED' | 'COMPLETED' | 'ARCHIVED';
+
+export interface ExamCycle {
+  id: string;
+  tenant_id: string;
+  name: string;
+  cycle_type: CycleType;
+  start_date: string;
+  end_date: string;
+  status: CycleStatus;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TimeSlot {
+  id: string;
+  tenant_id: string;
+  cycle_id: string;
+  name: string;
+  start_time: string;
+  end_time: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  cycle?: ExamCycle | null;
+}
+
+export const CYCLE_TYPE_LABELS: Record<CycleType, string> = {
+  MIDTERM: 'Midterm',
+  FINAL: 'Final',
+  SUPPLEMENTARY: 'Supplementary',
+  MAKEUP: 'Makeup',
+};
+
+export const CYCLE_TYPE_COLORS: Record<CycleType, string> = {
+  MIDTERM: 'bg-blue-100 text-blue-800 border-blue-200',
+  FINAL: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  SUPPLEMENTARY: 'bg-amber-100 text-amber-800 border-amber-200',
+  MAKEUP: 'bg-rose-100 text-rose-800 border-rose-200',
+};
+
+export const CYCLE_STATUS_LABELS: Record<CycleStatus, string> = {
+  DRAFT: 'Draft',
+  PUBLISHED: 'Published',
+  COMPLETED: 'Completed',
+  ARCHIVED: 'Archived',
+};
+
+export const CYCLE_STATUS_COLORS: Record<CycleStatus, string> = {
+  DRAFT: 'bg-slate-100 text-slate-700 border-slate-200',
+  PUBLISHED: 'bg-blue-100 text-blue-800 border-blue-200',
+  COMPLETED: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  ARCHIVED: 'bg-gray-200 text-gray-600 border-gray-300',
+};

@@ -11,6 +11,8 @@ import ProgramsPage from '@/pages/ProgramsPage';
 import CoursesPage from '@/pages/CoursesPage';
 import RoomsPage from '@/pages/RoomsPage';
 import FacultyPage from '@/pages/FacultyPage';
+import ExamCyclesPage from '@/pages/ExamCyclesPage';
+import TimeSlotsPage from '@/pages/TimeSlotsPage';
 import { Card } from '@/components/ui/Card';
 import { Construction } from 'lucide-react';
 
@@ -51,7 +53,8 @@ function App() {
             <Route path="courses" element={<CoursesPage />} />
             <Route path="rooms" element={<RoomsPage />} />
             <Route path="faculty" element={<FacultyPage />} />
-            <Route path="cycles" element={<ComingSoon title="Exam Cycles" />} />
+            <Route path="cycles" element={<ExamCyclesPage />} />
+            <Route path="cycles/:cycleId/slots" element={<TimeSlotsPage />} />
             <Route path="datesheet" element={<ComingSoon title="Datesheet" />} />
             <Route path="allocation" element={<ComingSoon title="Room Allocation" />} />
             <Route path="invigilation" element={<ComingSoon title="Invigilation" />} />
