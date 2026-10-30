@@ -160,7 +160,7 @@ export default function DashboardOverview() {
               { name: 'Module 2: Academic Master Data (Programs, Courses, Rooms, Faculty)', status: 'active' },
               { name: 'Module 3: Exam Cycles & Time Slots', status: 'active' },
               { name: 'Module 4: Datesheet Engine', status: 'active' },
-              { name: 'Module 5: Room Allocation Engine', status: 'pending' },
+              { name: 'Module 5: Room Allocation Engine', status: 'active' },
               { name: 'Module 6: Invigilation Duty Engine', status: 'pending' },
               { name: 'Modules 7-11: Reports, Tracking, QR, CRM, Analytics', status: 'pending' },
             ].map((module) => {
