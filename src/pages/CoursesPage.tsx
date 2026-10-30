@@ -5,8 +5,9 @@ import { Card, Badge } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input, Select } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
-import type { Course, Program } from '@/types/database';
-import { Plus, Search, BookOpen, Edit2, Trash2 } from 'lucide-react';
+import type { Course, Program, PaperType } from '@/types/database';
+import { PAPER_TYPE_LABELS, PAPER_TYPE_COLORS } from '@/types/database';
+import { Plus, Search, BookOpen, Edit2, Trash2, Users } from 'lucide-react';
 
 export default function CoursesPage() {
   const { user } = useAuth();
@@ -26,6 +27,11 @@ export default function CoursesPage() {
     program_id: '',
     credit_hours: 3,
     semester: 1,
+    strength: 0,
+    paper_type: 'REGULAR' as PaperType,
+    shared_paper_group: '',
+    faculty_name: '',
+    faculty_emp_code: '',
     is_active: true,
   });
 
@@ -54,13 +60,13 @@ export default function CoursesPage() {
 
   const openCreate = () => {
     setEditing(null);
-    setFormData({ code: '', title: '', program_id: programs[0]?.id || '', credit_hours: 3, semester: 1, is_active: true });
+    setFormData({ code: '', title: '', program_id: programs[0]?.id || '', credit_hours: 3, semester: 1, strength: 0, paper_type: 'REGULAR', shared_paper_group: '', faculty_name: '', faculty_emp_code: '', is_active: true });
     setModalOpen(true);
   };
 
   const openEdit = (c: Course) => {
     setEditing(c);
-    setFormData({ code: c.code, title: c.title, program_id: c.program_id, credit_hours: c.credit_hours, semester: c.semester, is_active: c.is_active });
+    setFormData({ code: c.code, title: c.title, program_id: c.program_id, credit_hours: c.credit_hours, semester: c.semester, strength: c.strength, paper_type: c.paper_type, shared_paper_group: c.shared_paper_group || '', faculty_name: c.faculty_name || '', faculty_emp_code: c.faculty_emp_code || '', is_active: c.is_active });
     setModalOpen(true);
   };
 
@@ -80,6 +86,11 @@ export default function CoursesPage() {
       title: formData.title,
       credit_hours: formData.credit_hours,
       semester: formData.semester,
+      strength: formData.strength,
+      paper_type: formData.paper_type,
+      shared_paper_group: formData.shared_paper_group || null,
+      faculty_name: formData.faculty_name || null,
+      faculty_emp_code: formData.faculty_emp_code || null,
       is_active: formData.is_active,
     };
 
@@ -153,6 +164,8 @@ export default function CoursesPage() {
                   <th className="text-left font-semibold text-slate-700 px-4 py-3">Title</th>
                   <th className="text-left font-semibold text-slate-700 px-4 py-3">Program</th>
                   <th className="text-left font-semibold text-slate-700 px-4 py-3">Semester</th>
+                  <th className="text-left font-semibold text-slate-700 px-4 py-3">Strength</th>
+                  <th className="text-left font-semibold text-slate-700 px-4 py-3">Paper Type</th>
                   <th className="text-left font-semibold text-slate-700 px-4 py-3">Credits</th>
                   <th className="text-left font-semibold text-slate-700 px-4 py-3">Status</th>
                   <th className="text-right font-semibold text-slate-700 px-4 py-3">Actions</th>
@@ -165,6 +178,8 @@ export default function CoursesPage() {
                     <td className="px-4 py-3 font-medium text-slate-900">{c.title}</td>
                     <td className="px-4 py-3 text-slate-600">{c.program?.code || '—'} {c.program?.name || ''}</td>
                     <td className="px-4 py-3 text-slate-600">Sem {c.semester}</td>
+                    <td className="px-4 py-3"><span className="flex items-center gap-1 text-slate-600"><Users className="h-3 w-3 text-slate-400" />{c.strength}</span></td>
+                    <td className="px-4 py-3"><Badge className={PAPER_TYPE_COLORS[c.paper_type]}>{PAPER_TYPE_LABELS[c.paper_type]}</Badge></td>
                     <td className="px-4 py-3 text-slate-600">{c.credit_hours} cr</td>
                     <td className="px-4 py-3">
                       {c.is_active ? <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200">Active</Badge> : <Badge className="bg-slate-100 text-slate-600 border-slate-200">Inactive</Badge>}
@@ -202,12 +217,24 @@ export default function CoursesPage() {
           <Input label="Course Title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} placeholder="Introduction to Programming" />
           <div className="grid grid-cols-2 gap-4">
             <Input label="Semester" type="number" min={1} max={16} value={formData.semester} onChange={(e) => setFormData({ ...formData, semester: parseInt(e.target.value) || 1 })} />
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Status</label>
-              <div className="flex gap-3">
-                <button onClick={() => setFormData({ ...formData, is_active: true })} className={`flex-1 h-10 rounded-lg border text-sm font-medium transition-colors ${formData.is_active ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}`}>Active</button>
-                <button onClick={() => setFormData({ ...formData, is_active: false })} className={`flex-1 h-10 rounded-lg border text-sm font-medium transition-colors ${!formData.is_active ? 'border-slate-500 bg-slate-50 text-slate-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}`}>Inactive</button>
-              </div>
+            <Input label="Student Strength" type="number" min={0} value={formData.strength} onChange={(e) => setFormData({ ...formData, strength: parseInt(e.target.value) || 0 })} />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Select label="Paper Type" value={formData.paper_type} onChange={(e) => setFormData({ ...formData, paper_type: e.target.value as PaperType })}>
+              <option value="REGULAR">Regular (full cohort)</option>
+              <option value="BACKLOG">Backlog (repeat/retake)</option>
+            </Select>
+            <Input label="Shared Paper Group (optional)" value={formData.shared_paper_group} onChange={(e) => setFormData({ ...formData, shared_paper_group: e.target.value })} placeholder="e.g. CS-SEM3-GROUP-A" />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Input label="Faculty Name (optional)" value={formData.faculty_name} onChange={(e) => setFormData({ ...formData, faculty_name: e.target.value })} placeholder="Dr. John Smith" />
+            <Input label="Faculty Emp Code (optional)" value={formData.faculty_emp_code} onChange={(e) => setFormData({ ...formData, faculty_emp_code: e.target.value })} placeholder="EMP-001" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Status</label>
+            <div className="flex gap-3">
+              <button onClick={() => setFormData({ ...formData, is_active: true })} className={`flex-1 h-10 rounded-lg border text-sm font-medium transition-colors ${formData.is_active ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}`}>Active</button>
+              <button onClick={() => setFormData({ ...formData, is_active: false })} className={`flex-1 h-10 rounded-lg border text-sm font-medium transition-colors ${!formData.is_active ? 'border-slate-500 bg-slate-50 text-slate-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}`}>Inactive</button>
             </div>
           </div>
         </div>

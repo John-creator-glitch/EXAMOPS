@@ -5,8 +5,8 @@ import { Card, Badge } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input, Select } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
-import type { ExamCycle, CycleType, CycleStatus } from '@/types/database';
-import { CYCLE_TYPE_LABELS, CYCLE_TYPE_COLORS, CYCLE_STATUS_LABELS, CYCLE_STATUS_COLORS } from '@/types/database';
+import type { ExamCycle, CycleType, CycleStatus, CycleScope } from '@/types/database';
+import { CYCLE_TYPE_LABELS, CYCLE_TYPE_COLORS, CYCLE_STATUS_LABELS, CYCLE_STATUS_COLORS, CYCLE_SCOPE_LABELS, CYCLE_SCOPE_COLORS } from '@/types/database';
 import { Plus, Search, Calendar, Edit2, Trash2, Clock, ChevronRight, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,6 +28,9 @@ export default function ExamCyclesPage() {
     cycle_type: 'MIDTERM' as CycleType,
     start_date: '',
     end_date: '',
+    ms_start_date: '',
+    ms_end_date: '',
+    scope: 'UG' as CycleScope,
     status: 'DRAFT' as CycleStatus,
     is_active: true,
   });
@@ -65,13 +68,13 @@ export default function ExamCyclesPage() {
   const openCreate = () => {
     setEditing(null);
     const today = new Date().toISOString().split('T')[0];
-    setFormData({ name: '', cycle_type: 'MIDTERM', start_date: today, end_date: today, status: 'DRAFT', is_active: true });
+    setFormData({ name: '', cycle_type: 'MIDTERM', start_date: today, end_date: today, ms_start_date: '', ms_end_date: '', scope: 'UG', status: 'DRAFT', is_active: true });
     setModalOpen(true);
   };
 
   const openEdit = (c: ExamCycle) => {
     setEditing(c);
-    setFormData({ name: c.name, cycle_type: c.cycle_type, start_date: c.start_date, end_date: c.end_date, status: c.status, is_active: c.is_active });
+    setFormData({ name: c.name, cycle_type: c.cycle_type, start_date: c.start_date, end_date: c.end_date, ms_start_date: c.ms_start_date || '', ms_end_date: c.ms_end_date || '', scope: c.scope || 'UG', status: c.status, is_active: c.is_active });
     setModalOpen(true);
   };
 
@@ -95,6 +98,9 @@ export default function ExamCyclesPage() {
       cycle_type: formData.cycle_type,
       start_date: formData.start_date,
       end_date: formData.end_date,
+      ms_start_date: formData.ms_start_date || null,
+      ms_end_date: formData.ms_end_date || null,
+      scope: formData.scope,
       status: formData.status,
       is_active: formData.is_active,
     };
@@ -219,6 +225,9 @@ export default function ExamCyclesPage() {
                 <button onClick={() => navigate(`/dashboard/cycles/${c.id}/slots`)} className="text-xs px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors font-medium flex items-center gap-1">
                   Time Slots <ChevronRight className="h-3 w-3" />
                 </button>
+                <div className="flex items-center gap-2">
+                  <Badge className={CYCLE_SCOPE_COLORS[c.scope]}>{CYCLE_SCOPE_LABELS[c.scope]}</Badge>
+                </div>
               </div>
 
               {/* Actions */}
@@ -258,6 +267,20 @@ export default function ExamCyclesPage() {
             <Input label="Start Date" type="date" value={formData.start_date} onChange={(e) => setFormData({ ...formData, start_date: e.target.value })} />
             <Input label="End Date" type="date" value={formData.end_date} onChange={(e) => setFormData({ ...formData, end_date: e.target.value })} />
           </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Scope (Track)</label>
+            <div className="flex gap-3">
+              <button onClick={() => setFormData({ ...formData, scope: 'UG' })} className={`flex-1 h-10 rounded-lg border text-sm font-medium transition-colors ${formData.scope === 'UG' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}`}>UG (Mon–Fri)</button>
+              <button onClick={() => setFormData({ ...formData, scope: 'GR' })} className={`flex-1 h-10 rounded-lg border text-sm font-medium transition-colors ${formData.scope === 'GR' ? 'border-amber-500 bg-amber-50 text-amber-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}`}>GR (Sat–Sun)</button>
+              <button onClick={() => setFormData({ ...formData, scope: 'BOTH' })} className={`flex-1 h-10 rounded-lg border text-sm font-medium transition-colors ${formData.scope === 'BOTH' ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}`}>Both</button>
+            </div>
+          </div>
+          {(formData.scope === 'GR' || formData.scope === 'BOTH') && (
+            <div className="grid grid-cols-2 gap-4">
+              <Input label="MS/PhD Start Date" type="date" value={formData.ms_start_date} onChange={(e) => setFormData({ ...formData, ms_start_date: e.target.value })} />
+              <Input label="MS/PhD End Date" type="date" value={formData.ms_end_date} onChange={(e) => setFormData({ ...formData, ms_end_date: e.target.value })} />
+            </div>
+          )}
         </div>
       </Modal>
     </div>

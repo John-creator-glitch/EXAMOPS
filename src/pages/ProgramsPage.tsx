@@ -3,10 +3,11 @@ import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
 import { Card, Badge } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+import { Input, Select } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
-import type { Program } from '@/types/database';
-import { Plus, Search, BookOpen, Edit2, Trash2, GraduationCap } from 'lucide-react';
+import type { Program, ProgramLevel } from '@/types/database';
+import { PROGRAM_LEVEL_LABELS, PROGRAM_LEVEL_COLORS, PROGRAM_LEVEL_TRACK } from '@/types/database';
+import { Plus, Search, BookOpen, Edit2, Trash2, GraduationCap, Building } from 'lucide-react';
 
 export default function ProgramsPage() {
   const { user } = useAuth();
@@ -21,6 +22,8 @@ export default function ProgramsPage() {
   const [formData, setFormData] = useState({
     code: '',
     name: '',
+    department: '',
+    program_level: 'BACHELOR' as ProgramLevel,
     duration_years: 4,
     total_semesters: 8,
     is_active: true,
@@ -45,7 +48,7 @@ export default function ProgramsPage() {
 
   const openCreate = () => {
     setEditing(null);
-    setFormData({ code: '', name: '', duration_years: 4, total_semesters: 8, is_active: true });
+    setFormData({ code: '', name: '', department: '', program_level: 'BACHELOR', duration_years: 4, total_semesters: 8, is_active: true });
     setModalOpen(true);
   };
 
@@ -54,6 +57,8 @@ export default function ProgramsPage() {
     setFormData({
       code: p.code,
       name: p.name,
+      department: p.department || '',
+      program_level: p.program_level || 'BACHELOR',
       duration_years: p.duration_years,
       total_semesters: p.total_semesters,
       is_active: p.is_active,
@@ -73,6 +78,8 @@ export default function ProgramsPage() {
       tenant_id: tenantId,
       code: formData.code.toUpperCase(),
       name: formData.name,
+      department: formData.department || null,
+      program_level: formData.program_level,
       duration_years: formData.duration_years,
       total_semesters: formData.total_semesters,
       is_active: formData.is_active,
@@ -134,6 +141,8 @@ export default function ProgramsPage() {
                 <tr className="border-b border-slate-200 bg-slate-50">
                   <th className="text-left font-semibold text-slate-700 px-4 py-3">Code</th>
                   <th className="text-left font-semibold text-slate-700 px-4 py-3">Program Name</th>
+                  <th className="text-left font-semibold text-slate-700 px-4 py-3">Department</th>
+                  <th className="text-left font-semibold text-slate-700 px-4 py-3">Level</th>
                   <th className="text-left font-semibold text-slate-700 px-4 py-3">Duration</th>
                   <th className="text-left font-semibold text-slate-700 px-4 py-3">Semesters</th>
                   <th className="text-left font-semibold text-slate-700 px-4 py-3">Status</th>
@@ -154,6 +163,8 @@ export default function ProgramsPage() {
                         <span className="font-medium text-slate-900">{p.name}</span>
                       </div>
                     </td>
+                    <td className="px-4 py-3 text-slate-600">{p.department || '—'}</td>
+                    <td className="px-4 py-3"><Badge className={PROGRAM_LEVEL_COLORS[p.program_level]}>{PROGRAM_LEVEL_LABELS[p.program_level]}</Badge></td>
                     <td className="px-4 py-3 text-slate-600">{p.duration_years} years</td>
                     <td className="px-4 py-3 text-slate-600">{p.total_semesters}</td>
                     <td className="px-4 py-3">
@@ -195,6 +206,17 @@ export default function ProgramsPage() {
         <div className="space-y-4">
           <Input label="Program Code" value={formData.code} onChange={(e) => setFormData({ ...formData, code: e.target.value })} placeholder="BSCS" />
           <Input label="Program Name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="BS Computer Science" />
+          <div className="grid grid-cols-2 gap-4">
+            <Input label="Department" value={formData.department} onChange={(e) => setFormData({ ...formData, department: e.target.value })} placeholder="Computer Science" icon={<Building className="h-4 w-4" />} />
+            <Select label="Program Level" value={formData.program_level} onChange={(e) => setFormData({ ...formData, program_level: e.target.value as ProgramLevel })}>
+              <option value="ASSOCIATE_DEGREE">Associate Degree</option>
+              <option value="BACHELOR">Bachelor</option>
+              <option value="PROFESSIONAL_DOCTORATE">Professional Doctorate</option>
+              <option value="MS">MS</option>
+              <option value="MPHIL">MPhil</option>
+              <option value="PHD">PhD</option>
+            </Select>
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <Input label="Duration (Years)" type="number" min={1} max={8} value={formData.duration_years} onChange={(e) => setFormData({ ...formData, duration_years: parseInt(e.target.value) || 1 })} />
             <Input label="Total Semesters" type="number" min={1} max={16} value={formData.total_semesters} onChange={(e) => setFormData({ ...formData, total_semesters: parseInt(e.target.value) || 1 })} />

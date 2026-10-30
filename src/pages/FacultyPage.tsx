@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import type { Faculty } from '@/types/database';
-import { Plus, Search, Users, Edit2, Trash2, Mail, Phone, Briefcase } from 'lucide-react';
+import { Plus, Search, Users, Edit2, Trash2, Mail, Phone, Briefcase, CalendarOff } from 'lucide-react';
 
 export default function FacultyPage() {
   const { user } = useAuth();
@@ -27,6 +27,9 @@ export default function FacultyPage() {
     department: '',
     designation: '',
     max_duties_per_day: 2,
+    max_duties_per_cycle: '' as string | number,
+    available: true,
+    off_days: [] as string[],
     is_active: true,
   });
 
@@ -52,13 +55,13 @@ export default function FacultyPage() {
 
   const openCreate = () => {
     setEditing(null);
-    setFormData({ employee_id: '', full_name: '', email: '', phone: '', department: '', designation: '', max_duties_per_day: 2, is_active: true });
+    setFormData({ employee_id: '', full_name: '', email: '', phone: '', department: '', designation: '', max_duties_per_day: 2, max_duties_per_cycle: '', available: true, off_days: [], is_active: true });
     setModalOpen(true);
   };
 
   const openEdit = (f: Faculty) => {
     setEditing(f);
-    setFormData({ employee_id: f.employee_id, full_name: f.full_name, email: f.email || '', phone: f.phone || '', department: f.department || '', designation: f.designation || '', max_duties_per_day: f.max_duties_per_day, is_active: f.is_active });
+    setFormData({ employee_id: f.employee_id, full_name: f.full_name, email: f.email || '', phone: f.phone || '', department: f.department || '', designation: f.designation || '', max_duties_per_day: f.max_duties_per_day, max_duties_per_cycle: f.max_duties_per_cycle || '', available: f.available, off_days: f.off_days || [], is_active: f.is_active });
     setModalOpen(true);
   };
 
@@ -80,6 +83,9 @@ export default function FacultyPage() {
       department: formData.department || null,
       designation: formData.designation || null,
       max_duties_per_day: formData.max_duties_per_day,
+      max_duties_per_cycle: formData.max_duties_per_cycle === '' ? null : Number(formData.max_duties_per_cycle),
+      available: formData.available,
+      off_days: formData.off_days,
       is_active: formData.is_active,
     };
 
@@ -156,6 +162,7 @@ export default function FacultyPage() {
                   <th className="text-left font-semibold text-slate-700 px-4 py-3">Designation</th>
                   <th className="text-left font-semibold text-slate-700 px-4 py-3">Contact</th>
                   <th className="text-left font-semibold text-slate-700 px-4 py-3">Max Duties</th>
+                  <th className="text-left font-semibold text-slate-700 px-4 py-3">Availability</th>
                   <th className="text-left font-semibold text-slate-700 px-4 py-3">Status</th>
                   <th className="text-right font-semibold text-slate-700 px-4 py-3">Actions</th>
                 </tr>
@@ -180,6 +187,7 @@ export default function FacultyPage() {
                       </div>
                     </td>
                     <td className="px-4 py-3"><Badge className="bg-amber-100 text-amber-800 border-amber-200">{f.max_duties_per_day}/day</Badge></td>
+                    <td className="px-4 py-3">{f.available ? <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200">Available</Badge> : <Badge className="bg-red-100 text-red-800 border-red-200">Unavailable</Badge>}</td>
                     <td className="px-4 py-3">{f.is_active ? <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200">Active</Badge> : <Badge className="bg-slate-100 text-slate-600 border-slate-200">Inactive</Badge>}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-1">
@@ -216,6 +224,22 @@ export default function FacultyPage() {
             <Input label="Designation" value={formData.designation} onChange={(e) => setFormData({ ...formData, designation: e.target.value })} placeholder="Professor" />
           </div>
           <Input label="Max Invigilation Duties Per Day" type="number" min={1} max={6} value={formData.max_duties_per_day} onChange={(e) => setFormData({ ...formData, max_duties_per_day: parseInt(e.target.value) || 1 })} />
+          <Input label="Max Duties Per Cycle (optional)" type="number" min={0} value={formData.max_duties_per_cycle} onChange={(e) => setFormData({ ...formData, max_duties_per_cycle: e.target.value })} placeholder="No limit" />
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Off Days (weekly days off)</label>
+            <div className="flex flex-wrap gap-2">
+              {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day) => (
+                <button key={day} onClick={() => setFormData({ ...formData, off_days: formData.off_days.includes(day) ? formData.off_days.filter((d) => d !== day) : [...formData.off_days, day] })} className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors ${formData.off_days.includes(day) ? 'border-amber-500 bg-amber-50 text-amber-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}`}>{day}</button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Availability for Invigilation</label>
+            <div className="flex gap-3">
+              <button onClick={() => setFormData({ ...formData, available: true })} className={`flex-1 h-10 rounded-lg border text-sm font-medium transition-colors ${formData.available ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}`}>Available</button>
+              <button onClick={() => setFormData({ ...formData, available: false })} className={`flex-1 h-10 rounded-lg border text-sm font-medium transition-colors ${!formData.available ? 'border-red-500 bg-red-50 text-red-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}`}>Unavailable</button>
+            </div>
+          </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1.5">Status</label>
             <div className="flex gap-3">

@@ -21,6 +21,11 @@ import ReportsPage from '@/pages/ReportsPage';
 import EnvelopesPage from '@/pages/EnvelopesPage';
 import QRPublisherPage from '@/pages/QRPublisherPage';
 import AnalyticsPage from '@/pages/AnalyticsPage';
+import SettingsPage from '@/pages/SettingsPage';
+import HolidaysPage from '@/pages/HolidaysPage';
+import FacultyLeavePage from '@/pages/FacultyLeavePage';
+import BridgingStudentsPage from '@/pages/BridgingStudentsPage';
+import DataHealthCheckPage from '@/pages/DataHealthCheckPage';
 import { Card } from '@/components/ui/Card';
 import { Construction } from 'lucide-react';
 
@@ -71,6 +76,11 @@ function App() {
             <Route path="envelopes" element={<EnvelopesPage />} />
             <Route path="qr" element={<QRPublisherPage />} />
             <Route path="analytics" element={<AnalyticsPage />} />
+            <Route path="settings" element={<SettingsPage />} />
+            <Route path="holidays" element={<HolidaysPage />} />
+            <Route path="faculty-leave" element={<FacultyLeavePage />} />
+            <Route path="bridging" element={<BridgingStudentsPage />} />
+            <Route path="health-check" element={<DataHealthCheckPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>

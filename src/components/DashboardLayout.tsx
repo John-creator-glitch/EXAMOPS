@@ -7,7 +7,8 @@ import { Badge } from '@/components/ui/Card';
 import {
   GraduationCap, LayoutDashboard, Building2, Users, LogOut,
   Menu, X, ChevronDown, Calendar, BookOpen, DoorOpen, FileText,
-  QrCode, BarChart3, ClipboardList, UserRound, FileBarChart, Package
+  QrCode, BarChart3, ClipboardList, UserRound, FileBarChart, Package,
+  Settings, CalendarOff, Plane, Users2, HeartPulse
 } from 'lucide-react';
 
 interface NavItem {
@@ -39,6 +40,7 @@ const navSections: { title: string; items: NavItem[] }[] = [
       { to: '/dashboard/rooms', label: 'Rooms', icon: DoorOpen, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER'] },
       { to: '/dashboard/faculty', label: 'Faculty', icon: UserRound, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER', 'REGISTRAR', 'HOD'] },
       { to: '/dashboard/cycles', label: 'Exam Cycles', icon: Calendar, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER'] },
+      { to: '/dashboard/bridging', label: 'Bridging Students', icon: Users2, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER', 'REGISTRAR'] },
     ],
   },
   {
@@ -47,6 +49,9 @@ const navSections: { title: string; items: NavItem[] }[] = [
       { to: '/dashboard/datesheet', label: 'Datesheets', icon: FileText, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER', 'REGISTRAR', 'HOD'] },
       { to: '/dashboard/allocation', label: 'Room Allocation', icon: ClipboardList, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER'] },
       { to: '/dashboard/invigilation', label: 'Invigilation', icon: Users, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER'] },
+      { to: '/dashboard/faculty-leave', label: 'Faculty Leave', icon: Plane, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER', 'REGISTRAR'] },
+      { to: '/dashboard/holidays', label: 'Holidays', icon: CalendarOff, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER'] },
+      { to: '/dashboard/health-check', label: 'Data Health Check', icon: HeartPulse, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER'] },
     ],
   },
   {
@@ -61,6 +66,7 @@ const navSections: { title: string; items: NavItem[] }[] = [
     title: 'Insights',
     items: [
       { to: '/dashboard/analytics', label: 'Analytics', icon: BarChart3, roles: ['SUPER_ADMIN', 'TENANT_ADMIN'] },
+      { to: '/dashboard/settings', label: 'Settings', icon: Settings, roles: ['SUPER_ADMIN', 'TENANT_ADMIN'] },
     ],
   },
 ];

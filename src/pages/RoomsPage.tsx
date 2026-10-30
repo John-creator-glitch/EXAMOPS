@@ -5,9 +5,9 @@ import { Card, Badge } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input, Select } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
-import type { Room, RoomType } from '@/types/database';
-import { ROOM_TYPE_LABELS, ROOM_TYPE_COLORS } from '@/types/database';
-import { Plus, Search, DoorOpen, Edit2, Trash2, Building } from 'lucide-react';
+import type { Room, RoomType, ChairType, RoomStatus } from '@/types/database';
+import { ROOM_TYPE_LABELS, ROOM_TYPE_COLORS, CHAIR_TYPE_LABELS, ROOM_STATUS_LABELS, ROOM_STATUS_COLORS } from '@/types/database';
+import { Plus, Search, DoorOpen, Edit2, Trash2, Building, Armchair } from 'lucide-react';
 
 export default function RoomsPage() {
   const { user } = useAuth();
@@ -27,6 +27,9 @@ export default function RoomsPage() {
     floor: '',
     capacity: 50,
     room_type: 'CLASSROOM' as RoomType,
+    chair_type: 'FIXED' as ChairType,
+    exam_capacity: '' as string | number,
+    status: 'ACTIVE' as RoomStatus,
     is_active: true,
   });
 
@@ -52,13 +55,13 @@ export default function RoomsPage() {
 
   const openCreate = () => {
     setEditing(null);
-    setFormData({ code: '', name: '', building: '', floor: '', capacity: 50, room_type: 'CLASSROOM', is_active: true });
+    setFormData({ code: '', name: '', building: '', floor: '', capacity: 50, room_type: 'CLASSROOM', chair_type: 'FIXED', exam_capacity: '', status: 'ACTIVE', is_active: true });
     setModalOpen(true);
   };
 
   const openEdit = (r: Room) => {
     setEditing(r);
-    setFormData({ code: r.code, name: r.name, building: r.building || '', floor: r.floor || '', capacity: r.capacity, room_type: r.room_type, is_active: r.is_active });
+    setFormData({ code: r.code, name: r.name, building: r.building || '', floor: r.floor || '', capacity: r.capacity, room_type: r.room_type, chair_type: r.chair_type || 'FIXED', exam_capacity: r.exam_capacity || '', status: r.status || 'ACTIVE', is_active: r.is_active });
     setModalOpen(true);
   };
 
@@ -79,6 +82,9 @@ export default function RoomsPage() {
       floor: formData.floor || null,
       capacity: formData.capacity,
       room_type: formData.room_type,
+      chair_type: formData.chair_type,
+      exam_capacity: formData.exam_capacity === '' ? null : Number(formData.exam_capacity),
+      status: formData.status,
       is_active: formData.is_active,
     };
 
@@ -157,8 +163,11 @@ export default function RoomsPage() {
                   <th className="text-left font-semibold text-slate-700 px-4 py-3">Room Name</th>
                   <th className="text-left font-semibold text-slate-700 px-4 py-3">Location</th>
                   <th className="text-left font-semibold text-slate-700 px-4 py-3">Type</th>
+                  <th className="text-left font-semibold text-slate-700 px-4 py-3">Chair Type</th>
                   <th className="text-left font-semibold text-slate-700 px-4 py-3">Capacity</th>
-                  <th className="text-left font-semibold text-slate-700 px-4 py-3">Status</th>
+                  <th className="text-left font-semibold text-slate-700 px-4 py-3">Exam Cap.</th>
+                  <th className="text-left font-semibold text-slate-700 px-4 py-3">Room Status</th>
+                  <th className="text-left font-semibold text-slate-700 px-4 py-3">Active</th>
                   <th className="text-right font-semibold text-slate-700 px-4 py-3">Actions</th>
                 </tr>
               </thead>
@@ -174,7 +183,10 @@ export default function RoomsPage() {
                     </td>
                     <td className="px-4 py-3 text-slate-600">{[r.building, r.floor ? `Floor ${r.floor}` : null].filter(Boolean).join(', ') || '—'}</td>
                     <td className="px-4 py-3"><Badge className={ROOM_TYPE_COLORS[r.room_type]}>{ROOM_TYPE_LABELS[r.room_type]}</Badge></td>
+                    <td className="px-4 py-3"><span className="flex items-center gap-1 text-slate-600 text-xs"><Armchair className="h-3 w-3 text-slate-400" />{CHAIR_TYPE_LABELS[r.chair_type]}</span></td>
                     <td className="px-4 py-3"><span className="font-semibold text-slate-900">{r.capacity}</span> <span className="text-slate-400 text-xs">seats</span></td>
+                    <td className="px-4 py-3"><span className="font-semibold text-slate-900">{r.exam_capacity ?? '—'}</span></td>
+                    <td className="px-4 py-3"><Badge className={ROOM_STATUS_COLORS[r.status]}>{ROOM_STATUS_LABELS[r.status]}</Badge></td>
                     <td className="px-4 py-3">{r.is_active ? <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200">Active</Badge> : <Badge className="bg-slate-100 text-slate-600 border-slate-200">Inactive</Badge>}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-1">
@@ -211,10 +223,25 @@ export default function RoomsPage() {
           <div className="grid grid-cols-3 gap-4">
             <Input label="Building" value={formData.building} onChange={(e) => setFormData({ ...formData, building: e.target.value })} placeholder="Main Block" />
             <Input label="Floor" value={formData.floor} onChange={(e) => setFormData({ ...formData, floor: e.target.value })} placeholder="1st" />
-            <Input label="Capacity" type="number" min={1} value={formData.capacity} onChange={(e) => setFormData({ ...formData, capacity: parseInt(e.target.value) || 1 })} />
+            <Input label="Physical Capacity" type="number" min={1} value={formData.capacity} onChange={(e) => setFormData({ ...formData, capacity: parseInt(e.target.value) || 1 })} />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Select label="Chair Type" value={formData.chair_type} onChange={(e) => setFormData({ ...formData, chair_type: e.target.value as ChairType })}>
+              <option value="FIXED">Fixed Chairs (50% usable)</option>
+              <option value="MOVABLE">Movable Chairs (100% usable)</option>
+            </Select>
+            <Input label="Exam Capacity (optional)" type="number" min={0} value={formData.exam_capacity} onChange={(e) => setFormData({ ...formData, exam_capacity: e.target.value })} placeholder="Auto-calculate" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Status</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Room Status</label>
+            <div className="flex gap-3">
+              <button onClick={() => setFormData({ ...formData, status: 'ACTIVE' })} className={`flex-1 h-10 rounded-lg border text-sm font-medium transition-colors ${formData.status === 'ACTIVE' ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}`}>Active</button>
+              <button onClick={() => setFormData({ ...formData, status: 'MAINTENANCE' })} className={`flex-1 h-10 rounded-lg border text-sm font-medium transition-colors ${formData.status === 'MAINTENANCE' ? 'border-amber-500 bg-amber-50 text-amber-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}`}>Maintenance</button>
+              <button onClick={() => setFormData({ ...formData, status: 'OFFLINE' })} className={`flex-1 h-10 rounded-lg border text-sm font-medium transition-colors ${formData.status === 'OFFLINE' ? 'border-red-500 bg-red-50 text-red-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}`}>Offline</button>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Active in System</label>
             <div className="flex gap-3">
               <button onClick={() => setFormData({ ...formData, is_active: true })} className={`flex-1 h-10 rounded-lg border text-sm font-medium transition-colors ${formData.is_active ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}`}>Active</button>
               <button onClick={() => setFormData({ ...formData, is_active: false })} className={`flex-1 h-10 rounded-lg border text-sm font-medium transition-colors ${!formData.is_active ? 'border-slate-500 bg-slate-50 text-slate-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}`}>Inactive</button>
