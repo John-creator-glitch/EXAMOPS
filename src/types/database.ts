@@ -69,7 +69,7 @@ export const PLAN_COLORS: Record<TenantPlan, string> = {
   STARTER: 'bg-blue-100 text-blue-800 border-blue-200',
   PROFESSIONAL: 'bg-indigo-100 text-indigo-800 border-indigo-200',
   ENTERPRISE: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  DEDICATED: 'bg-purple-100 text-purple-800 border-purple-200',
+  DEDICATED: 'bg-slate-100 text-slate-800 border-slate-200',
 };
 
 export const ROLE_COLORS: Record<UserRole, string> = {
@@ -87,6 +87,10 @@ export const ROLE_COLORS: Record<UserRole, string> = {
 // ============================================================
 
 export type RoomType = 'CLASSROOM' | 'HALL' | 'LAB' | 'OPEN_SPACE';
+export type ProgramLevel = 'ASSOCIATE_DEGREE' | 'BACHELOR' | 'PROFESSIONAL_DOCTORATE' | 'MS' | 'MPHIL' | 'PHD';
+export type PaperType = 'REGULAR' | 'BACKLOG';
+export type ChairType = 'FIXED' | 'MOVABLE';
+export type RoomStatus = 'ACTIVE' | 'MAINTENANCE' | 'OFFLINE';
 
 export interface Program {
   id: string;
@@ -95,6 +99,8 @@ export interface Program {
   name: string;
   duration_years: number;
   total_semesters: number;
+  department: string | null;
+  program_level: ProgramLevel;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -108,6 +114,11 @@ export interface Course {
   title: string;
   credit_hours: number;
   semester: number;
+  strength: number;
+  paper_type: PaperType;
+  shared_paper_group: string | null;
+  faculty_name: string | null;
+  faculty_emp_code: string | null;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -123,6 +134,9 @@ export interface Room {
   floor: string | null;
   capacity: number;
   room_type: RoomType;
+  chair_type: ChairType;
+  exam_capacity: number | null;
+  status: RoomStatus;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -138,6 +152,9 @@ export interface Faculty {
   department: string | null;
   designation: string | null;
   max_duties_per_day: number;
+  max_duties_per_cycle: number | null;
+  available: boolean;
+  off_days: string[];
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -157,12 +174,67 @@ export const ROOM_TYPE_COLORS: Record<RoomType, string> = {
   OPEN_SPACE: 'bg-slate-100 text-slate-800 border-slate-200',
 };
 
+export const PROGRAM_LEVEL_LABELS: Record<ProgramLevel, string> = {
+  ASSOCIATE_DEGREE: 'Associate Degree',
+  BACHELOR: 'Bachelor',
+  PROFESSIONAL_DOCTORATE: 'Professional Doctorate',
+  MS: 'MS',
+  MPHIL: 'MPhil',
+  PHD: 'PhD',
+};
+
+export const PROGRAM_LEVEL_COLORS: Record<ProgramLevel, string> = {
+  ASSOCIATE_DEGREE: 'bg-cyan-100 text-cyan-800 border-cyan-200',
+  BACHELOR: 'bg-blue-100 text-blue-800 border-blue-200',
+  PROFESSIONAL_DOCTORATE: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  MS: 'bg-amber-100 text-amber-800 border-amber-200',
+  MPHIL: 'bg-rose-100 text-rose-800 border-rose-200',
+  PHD: 'bg-slate-100 text-slate-800 border-slate-200',
+};
+
+export const PROGRAM_LEVEL_TRACK: Record<ProgramLevel, 'UG' | 'GR'> = {
+  ASSOCIATE_DEGREE: 'UG',
+  BACHELOR: 'UG',
+  PROFESSIONAL_DOCTORATE: 'UG',
+  MS: 'GR',
+  MPHIL: 'GR',
+  PHD: 'GR',
+};
+
+export const PAPER_TYPE_LABELS: Record<PaperType, string> = {
+  REGULAR: 'Regular',
+  BACKLOG: 'Backlog',
+};
+
+export const PAPER_TYPE_COLORS: Record<PaperType, string> = {
+  REGULAR: 'bg-blue-100 text-blue-800 border-blue-200',
+  BACKLOG: 'bg-amber-100 text-amber-800 border-amber-200',
+};
+
+export const CHAIR_TYPE_LABELS: Record<ChairType, string> = {
+  FIXED: 'Fixed Chairs',
+  MOVABLE: 'Movable Chairs',
+};
+
+export const ROOM_STATUS_LABELS: Record<RoomStatus, string> = {
+  ACTIVE: 'Active',
+  MAINTENANCE: 'Maintenance',
+  OFFLINE: 'Offline',
+};
+
+export const ROOM_STATUS_COLORS: Record<RoomStatus, string> = {
+  ACTIVE: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  MAINTENANCE: 'bg-amber-100 text-amber-800 border-amber-200',
+  OFFLINE: 'bg-red-100 text-red-800 border-red-200',
+};
+
 // ============================================================
 // Module 3: Exam Cycles & Time Slots
 // ============================================================
 
 export type CycleType = 'MIDTERM' | 'FINAL' | 'SUPPLEMENTARY' | 'MAKEUP';
 export type CycleStatus = 'DRAFT' | 'PUBLISHED' | 'COMPLETED' | 'ARCHIVED';
+export type CycleScope = 'UG' | 'GR' | 'BOTH';
 
 export interface ExamCycle {
   id: string;
@@ -171,6 +243,9 @@ export interface ExamCycle {
   cycle_type: CycleType;
   start_date: string;
   end_date: string;
+  ms_start_date: string | null;
+  ms_end_date: string | null;
+  scope: CycleScope;
   status: CycleStatus;
   is_active: boolean;
   created_at: string;
@@ -216,6 +291,18 @@ export const CYCLE_STATUS_COLORS: Record<CycleStatus, string> = {
   PUBLISHED: 'bg-blue-100 text-blue-800 border-blue-200',
   COMPLETED: 'bg-emerald-100 text-emerald-800 border-emerald-200',
   ARCHIVED: 'bg-gray-200 text-gray-600 border-gray-300',
+};
+
+export const CYCLE_SCOPE_LABELS: Record<CycleScope, string> = {
+  UG: 'Undergraduate (Mon–Fri)',
+  GR: 'Graduate (Sat–Sun)',
+  BOTH: 'Both Tracks',
+};
+
+export const CYCLE_SCOPE_COLORS: Record<CycleScope, string> = {
+  UG: 'bg-blue-100 text-blue-800 border-blue-200',
+  GR: 'bg-amber-100 text-amber-800 border-amber-200',
+  BOTH: 'bg-indigo-100 text-indigo-800 border-indigo-200',
 };
 
 // ============================================================
@@ -324,4 +411,69 @@ export const ENVELOPE_STATUS_COLORS: Record<EnvelopeStatus, string> = {
   DISTRIBUTED: 'bg-blue-100 text-blue-800 border-blue-200',
   COLLECTED: 'bg-emerald-100 text-emerald-800 border-emerald-200',
   ARCHIVED: 'bg-gray-200 text-gray-600 border-gray-300',
+};
+
+// ============================================================
+// Settings, Holidays, Faculty Leave, Bridging Students
+// ============================================================
+
+export type SettingValueType = 'STRING' | 'NUMBER' | 'BOOLEAN' | 'JSON';
+
+export interface Setting {
+  id: string;
+  tenant_id: string;
+  key: string;
+  value: string;
+  value_type: SettingValueType;
+  category: string;
+  description: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Holiday {
+  id: string;
+  tenant_id: string;
+  name: string;
+  holiday_date: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FacultyLeave {
+  id: string;
+  tenant_id: string;
+  faculty_id: string;
+  start_date: string;
+  end_date: string;
+  reason: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  faculty?: Faculty | null;
+}
+
+export interface BridgingStudent {
+  id: string;
+  tenant_id: string;
+  student_name: string;
+  roll_number: string;
+  primary_program_id: string;
+  primary_semester: number;
+  bridging_program_id: string;
+  bridging_semester: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  primary_program?: Program | null;
+  bridging_program?: Program | null;
+}
+
+export const SETTING_CATEGORIES: Record<string, string> = {
+  ROOM: 'Room & Seating',
+  INVIGILATION: 'Invigilation',
+  SCHEDULING: 'Scheduling',
+  INSTITUTE: 'Institute',
+  GENERAL: 'General',
 };
