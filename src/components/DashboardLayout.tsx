@@ -42,9 +42,9 @@ const navSections: { title: string; items: NavItem[] }[] = [
     ],
   },
   {
-    title: 'Operations (Module 4+)',
+    title: 'Operations',
     items: [
-      { to: '/dashboard/datesheet', label: 'Datesheet', icon: FileText, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER', 'REGISTRAR', 'HOD'] },
+      { to: '/dashboard/datesheet', label: 'Datesheets', icon: FileText, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER', 'REGISTRAR', 'HOD'] },
       { to: '/dashboard/allocation', label: 'Room Allocation', icon: ClipboardList, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER'] },
       { to: '/dashboard/invigilation', label: 'Invigilation', icon: Users, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER'] },
     ],

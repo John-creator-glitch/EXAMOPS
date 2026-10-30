@@ -20,7 +20,7 @@ export default function DashboardOverview() {
     rooms: 0,
     faculty: 0,
     cycles: 0,
-    publishedCycles: 0,
+    datesheets: 0,
   });
 
   if (!user || !user.profile) return null;
@@ -33,7 +33,7 @@ export default function DashboardOverview() {
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
 
   const loadCounts = useCallback(async () => {
-    const [tenants, users, programs, courses, rooms, faculty, cycles] = await Promise.all([
+    const [tenants, users, programs, courses, rooms, faculty, cycles, datesheets] = await Promise.all([
       supabase.from('tenants').select('*', { count: 'exact', head: true }),
       supabase.from('profiles').select('*', { count: 'exact', head: true }),
       supabase.from('programs').select('*', { count: 'exact', head: true }),
@@ -41,6 +41,7 @@ export default function DashboardOverview() {
       supabase.from('rooms').select('*', { count: 'exact', head: true }),
       supabase.from('faculty').select('*', { count: 'exact', head: true }),
       supabase.from('exam_cycles').select('*', { count: 'exact', head: true }),
+      supabase.from('datesheets').select('*', { count: 'exact', head: true }),
     ]);
 
     setCounts({
@@ -51,7 +52,7 @@ export default function DashboardOverview() {
       rooms: rooms.count || 0,
       faculty: faculty.count || 0,
       cycles: cycles.count || 0,
-      publishedCycles: 0,
+      datesheets: datesheets.count || 0,
     });
   }, []);
 
@@ -70,6 +71,7 @@ export default function DashboardOverview() {
         { label: 'Rooms', value: counts.rooms, icon: DoorOpen, color: 'text-emerald-600 bg-emerald-50' },
         { label: 'Faculty', value: counts.faculty, icon: UserRound, color: 'text-amber-600 bg-amber-50' },
         { label: 'Exam Cycles', value: counts.cycles, icon: Calendar, color: 'text-rose-600 bg-rose-50' },
+        { label: 'Datesheets', value: counts.datesheets, icon: FileText, color: 'text-indigo-600 bg-indigo-50' },
       ];
 
   return (
@@ -132,7 +134,7 @@ export default function DashboardOverview() {
       {/* Stats grid */}
       <div>
         <h2 className="text-lg font-semibold text-slate-900 mb-3">Overview</h2>
-        <div className={`grid ${isSuperAdmin ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'} gap-4`}>
+        <div className={`grid ${isSuperAdmin ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6'} gap-4`}>
           {stats.map((stat) => {
             const Icon = stat.icon;
             return (
@@ -157,7 +159,7 @@ export default function DashboardOverview() {
               { name: 'Module 1: Foundation (Auth, Tenants, Users)', status: 'active' },
               { name: 'Module 2: Academic Master Data (Programs, Courses, Rooms, Faculty)', status: 'active' },
               { name: 'Module 3: Exam Cycles & Time Slots', status: 'active' },
-              { name: 'Module 4: Datesheet Engine', status: 'pending' },
+              { name: 'Module 4: Datesheet Engine', status: 'active' },
               { name: 'Module 5: Room Allocation Engine', status: 'pending' },
               { name: 'Module 6: Invigilation Duty Engine', status: 'pending' },
               { name: 'Modules 7-11: Reports, Tracking, QR, CRM, Analytics', status: 'pending' },
@@ -195,6 +197,7 @@ export default function DashboardOverview() {
             <>
               <QuickActionCard icon={BookOpen} title="Academic Data" description="Manage programs, courses, and faculty" color="text-blue-600 bg-blue-50" onClick={() => navigate('/dashboard/programs')} />
               <QuickActionCard icon={Calendar} title="Exam Cycles" description="Create and manage exam schedules" color="text-amber-600 bg-amber-50" onClick={() => navigate('/dashboard/cycles')} />
+              <QuickActionCard icon={FileText} title="Datesheets" description="Build and publish exam schedules" color="text-indigo-600 bg-indigo-50" onClick={() => navigate('/dashboard/datesheet')} />
               <QuickActionCard icon={DoorOpen} title="Rooms" description="Manage exam halls and classrooms" color="text-emerald-600 bg-emerald-50" onClick={() => navigate('/dashboard/rooms')} />
             </>
           )}

@@ -217,3 +217,48 @@ export const CYCLE_STATUS_COLORS: Record<CycleStatus, string> = {
   COMPLETED: 'bg-emerald-100 text-emerald-800 border-emerald-200',
   ARCHIVED: 'bg-gray-200 text-gray-600 border-gray-300',
 };
+
+// ============================================================
+// Module 4: Datesheet Engine
+// ============================================================
+
+export type DatesheetStatus = 'DRAFT' | 'PUBLISHED';
+
+export interface Datesheet {
+  id: string;
+  tenant_id: string;
+  cycle_id: string;
+  name: string;
+  status: DatesheetStatus;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+  cycle?: ExamCycle | null;
+  item_count?: number;
+}
+
+export interface DatesheetItem {
+  id: string;
+  tenant_id: string;
+  datesheet_id: string;
+  course_id: string;
+  exam_date: string;
+  time_slot_id: string | null;
+  room_id: string | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  course?: Course | null;
+  time_slot?: TimeSlot | null;
+  room?: Room | null;
+}
+
+export const DATESHEET_STATUS_LABELS: Record<DatesheetStatus, string> = {
+  DRAFT: 'Draft',
+  PUBLISHED: 'Published',
+};
+
+export const DATESHEET_STATUS_COLORS: Record<DatesheetStatus, string> = {
+  DRAFT: 'bg-slate-100 text-slate-700 border-slate-200',
+  PUBLISHED: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+};
