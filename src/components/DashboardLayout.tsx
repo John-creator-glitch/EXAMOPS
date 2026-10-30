@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/Card';
 import {
   GraduationCap, LayoutDashboard, Building2, Users, LogOut,
   Menu, X, ChevronDown, Calendar, BookOpen, DoorOpen, FileText,
-  QrCode, BarChart3, ClipboardList, UserRound
+  QrCode, BarChart3, ClipboardList, UserRound, FileBarChart, Package
 } from 'lucide-react';
 
 interface NavItem {
@@ -50,10 +50,16 @@ const navSections: { title: string; items: NavItem[] }[] = [
     ],
   },
   {
-    title: 'Insights (Module 9+)',
+    title: 'Reports & Tracking',
     items: [
-      { to: '/dashboard/envelopes', label: 'Envelope Tracker', icon: ClipboardList, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER', 'REGISTRAR'] },
+      { to: '/dashboard/reports', label: 'Reports', icon: FileBarChart, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER', 'REGISTRAR', 'HOD'] },
+      { to: '/dashboard/envelopes', label: 'Envelope Tracker', icon: Package, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER', 'REGISTRAR'] },
       { to: '/dashboard/qr', label: 'QR Publisher', icon: QrCode, roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'EXAM_OFFICER'] },
+    ],
+  },
+  {
+    title: 'Insights',
+    items: [
       { to: '/dashboard/analytics', label: 'Analytics', icon: BarChart3, roles: ['SUPER_ADMIN', 'TENANT_ADMIN'] },
     ],
   },

@@ -291,3 +291,37 @@ export const INVIGILATION_ROLE_COLORS: Record<InvigilationRole, string> = {
   INVIGILATOR: 'bg-emerald-100 text-emerald-800 border-emerald-200',
   RELIEF: 'bg-amber-100 text-amber-800 border-amber-200',
 };
+
+// ============================================================
+// Module 8: Envelope Tracker
+// ============================================================
+
+export type EnvelopeStatus = 'PREPARED' | 'DISTRIBUTED' | 'COLLECTED' | 'ARCHIVED';
+
+export interface Envelope {
+  id: string;
+  tenant_id: string;
+  datesheet_item_id: string;
+  envelope_number: string;
+  status: EnvelopeStatus;
+  sealed_at: string | null;
+  returned_at: string | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  datesheet_item?: DatesheetItem | null;
+}
+
+export const ENVELOPE_STATUS_LABELS: Record<EnvelopeStatus, string> = {
+  PREPARED: 'Prepared',
+  DISTRIBUTED: 'Distributed',
+  COLLECTED: 'Collected',
+  ARCHIVED: 'Archived',
+};
+
+export const ENVELOPE_STATUS_COLORS: Record<EnvelopeStatus, string> = {
+  PREPARED: 'bg-slate-100 text-slate-700 border-slate-200',
+  DISTRIBUTED: 'bg-blue-100 text-blue-800 border-blue-200',
+  COLLECTED: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  ARCHIVED: 'bg-gray-200 text-gray-600 border-gray-300',
+};

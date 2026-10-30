@@ -162,7 +162,7 @@ export default function DashboardOverview() {
               { name: 'Module 4: Datesheet Engine', status: 'active' },
               { name: 'Module 5: Room Allocation Engine', status: 'active' },
               { name: 'Module 6: Invigilation Duty Engine', status: 'active' },
-              { name: 'Modules 7-11: Reports, Tracking, QR, CRM, Analytics', status: 'pending' },
+              { name: 'Modules 7-11: Reports, Tracking, QR, Analytics', status: 'active' },
             ].map((module) => {
               const Icon = module.status === 'active' ? CheckCircle2 : AlertCircle;
               return (

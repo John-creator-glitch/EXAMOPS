@@ -17,6 +17,10 @@ import DatesheetsPage from '@/pages/DatesheetsPage';
 import DatesheetDetailPage from '@/pages/DatesheetDetailPage';
 import RoomAllocationPage from '@/pages/RoomAllocationPage';
 import InvigilationPage from '@/pages/InvigilationPage';
+import ReportsPage from '@/pages/ReportsPage';
+import EnvelopesPage from '@/pages/EnvelopesPage';
+import QRPublisherPage from '@/pages/QRPublisherPage';
+import AnalyticsPage from '@/pages/AnalyticsPage';
 import { Card } from '@/components/ui/Card';
 import { Construction } from 'lucide-react';
 
@@ -63,9 +67,10 @@ function App() {
             <Route path="datesheets/:datesheetId" element={<DatesheetDetailPage />} />
             <Route path="allocation" element={<RoomAllocationPage />} />
             <Route path="invigilation" element={<InvigilationPage />} />
-            <Route path="envelopes" element={<ComingSoon title="Envelope Tracker" />} />
-            <Route path="qr" element={<ComingSoon title="QR Publisher" />} />
-            <Route path="analytics" element={<ComingSoon title="Analytics" />} />
+            <Route path="reports" element={<ReportsPage />} />
+            <Route path="envelopes" element={<EnvelopesPage />} />
+            <Route path="qr" element={<QRPublisherPage />} />
+            <Route path="analytics" element={<AnalyticsPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
